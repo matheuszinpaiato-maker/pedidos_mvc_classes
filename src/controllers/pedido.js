@@ -30,10 +30,8 @@ const alterar = (req, res) => {
             mensagem: "pedido não encontrado"
         })
     }
+    pedidos[indice].data = dados.data
     pedidos[indice].cliente_id = dados.cliente_id
-    pedidos[indice].produto = dados.produto
-    pedidos[indice].quantidade = dados.quantidade
-    pedidos[indice].preco = dados.preco
     res.json(pedidos[indice])
 }
 
