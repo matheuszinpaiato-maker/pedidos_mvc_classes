@@ -1,0 +1,17 @@
+[
+    {
+        "id":1,
+        "nome":"Chia",
+        "preco":30
+    },
+    {
+        "id":2,
+        "nome":"Pitaia",
+        "preco":60
+    },
+    {
+        "id":3,
+        "nome":"Carambola",
+        "preco":20
+    }
+]

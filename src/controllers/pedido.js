@@ -1,6 +1,6 @@
 const pedidos = require("../../dados/pedidos.json")
 
-function subotais() {
+function subtotais() {
     pedidos.forEach(p => {
         p.subtotal = p.quantidade * p.preco
     })
@@ -8,55 +8,53 @@ function subotais() {
 
 const criar = (req, res) => {
     const dados = req.body
-
-    dados.id = Number(pedidos[pedidos.length - 1].id) + 1 // autoIncrement
-    dados.subtotal = dados.quantidade * dados.preco
-
+    dados.id = Number(pedidos[pedidos.length - 1].id) + 1
     pedidos.push(dados)
-
     res.status(201).json(dados)
 }
 
 const listar = (req, res) => {
-    subotais()
+    subtotais()
     res.json(pedidos)
 }
 
 const alterar = (req, res) => {
     const id = Number(req.params.id)
     const dados = req.body
-    const indice = pedidos.findIndex(pedido => Number(pedido.id) === id)
+
+    const indice = pedidos.findIndex(
+        pedido => Number(pedido.id) === id
+    )
     if (indice === -1) {
         return res.status(404).json({
-            mensagem: "Pedido não encontrado"
+            mensagem: "pedido não encontrado"
         })
     }
-    pedidos[indice] = {
-        ...pedidos[indice],
-        ...dados,
-        id: pedidos[indice].id
-    }
-    pedidos[indice].subtotal =
-        pedidos[indice].quantidade * pedidos[indice].preco
-
+    pedidos[indice].cliente_id = dados.cliente_id
+    pedidos[indice].produto = dados.produto
+    pedidos[indice].quantidade = dados.quantidade
+    pedidos[indice].preco = dados.preco
     res.json(pedidos[indice])
 }
 
 const excluir = (req, res) => {
-    const id = Number(req.params.id)
-    const indice = pedidos.findIndex(pedido => Number(pedido.id) === id)
+    const id = req.params.id
+    let status = 0
 
-    if (indice === -1) {
-        return res.status(404).json({
-            mensagem: "Pedido não encontrado"
-        })
+    for (let indice = 0; indice < pedidos.length; indice++) {
+        if (pedidos[indice].id == id) {
+            pedidos.splice(indice, 1)
+            status = 1
+            break
+        }
     }
-    const pedidoExcluido = pedidos.splice(indice, 1)
-    res.json({
-        mensagem: "Pedido excluído com sucesso",
-        pedido: pedidoExcluido[0]
-    })
+    if (status == 1) {
+        res.json("pedido excluido com sucesso")
+    } else {
+        res.status(404).send("pedido não encontrado")
+    }
 }
+
 
 module.exports = {
     criar, listar, alterar, excluir
